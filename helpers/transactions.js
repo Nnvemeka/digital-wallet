@@ -13,7 +13,7 @@ async function creditAccount({
         }
     }
 
-    await models.account.increment(
+    await models.accounts.increment(
         { balance: amount }, { where: { id: account_id }, transaction: t }
     )
 
