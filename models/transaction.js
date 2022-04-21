@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Transaction.belongsTo(models.Account)
+      Transaction.belongsTo(models.accounts)
     }
   }
   Transaction.init({

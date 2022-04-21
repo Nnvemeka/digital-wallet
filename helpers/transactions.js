@@ -4,7 +4,7 @@ const models = require('../models')
 async function creditAccount({
     amount, account_id, purpose, reference = v4(), metadata, t
 }) {
-    const account = await models.account.findOne({ where: { id: account_id } })
+    const account = await models.accounts.findOne({ where: { id: account_id } })
 
     if (!account) {
         return {
@@ -17,7 +17,7 @@ async function creditAccount({
         { balance: amount }, { where: { id: account_id }, transaction: t }
     )
 
-    await models.transaction.create({
+    await models.transactions.create({
         txn_type: 'credit',
         purpose,
         amount,
@@ -41,7 +41,7 @@ async function creditAccount({
 async function debitAccount({
     amount, account_id, purpose, reference = v4(), metadata, t
 }) {
-    const account = await models.account.findOne({ where: { id: account_id } })
+    const account = await models.accounts.findOne({ where: { id: account_id } })
 
     if (!account) {
         return {
@@ -57,11 +57,11 @@ async function debitAccount({
         }
     }
 
-    await models.account.increment(
+    await models.accounts.increment(
         { balance: -amount }, { where: { id: account_id }, transaction: t }
     )
 
-    await models.transaction.create({
+    await models.transactions.create({
         txn_type: 'debit',
         purpose,
         amount,
