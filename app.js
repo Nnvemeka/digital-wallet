@@ -235,4 +235,66 @@ async function transfer(sender_id, recipient_id, amount) {
     }
 }
 
-transfer(2, 3, 60000).then(console.log).catch(console.log)
+// transfer(2, 3, 60000).then(console.log).catch(console.log)
+
+/**
+ * @param {string} reference reference of the transaction to reverse
+ */
+async function reverse(reference) {
+    // find the transaction
+    const t = await models.sequelize.transaction()
+    const txn_reference = v4()
+    const purpose = 'reversal'
+
+    try {
+        const transactions = await models.transactions.findAll({
+            where: { reference }
+        }, { transaction: t })
+
+        const transactionsArray = transactions.map((transaction) => {
+            if (transaction.txn_type === 'debit') {
+                return creditAccount({
+                    amount: transaction.amount,
+                    account_id: transaction.account_id,
+                    metadata: {
+                        originalReference: transaction.reference,
+                    },
+                    purpose,
+                    reference: txn_reference,
+                    t
+                })
+            }
+            return debitAccount({
+                amount: transaction.amount,
+                account_id: transaction.account_id,
+                metadata: {
+                    originalReference: transaction.reference
+                },
+                purpose,
+                reference: txn_reference,
+                t
+            })
+        })
+        const reversalResult = await Promise.all(transactionsArray)
+
+        const failedTxns = reversalResult.filter((result) => !result.success)
+        if (failedTxns.length) {
+            await t.rollback()
+            return reversalResult
+        }
+
+        await t.commit()
+        return {
+            success: true,
+            message: 'Reversal successful'
+        }
+    } catch(error) {
+        await t.rollback()
+        return {
+            success: false,
+            message: 'Internal server error'
+        }
+    }
+}
+
+// reverse('2b0db72e-f605-4d11-a83a-e7fd66b77794').then(console.log).catch(console.log)
