@@ -246,6 +246,62 @@ async function submitOtp({
     }
   }
   
+  async function submitPhone({
+    reference, phone,
+  }) {
+    try {
+      const transaction = await models.card_transactions.findOne({
+        where: { external_reference: reference },
+      });
+      if (!transaction) {
+        return {
+          success: false,
+          error: 'Transaction not found',
+        };
+      }
+      if (transaction.last_response === 'success') {
+        return {
+          success: false,
+          error: 'Transaction already succeeded',
+        };
+      }
+      const charge = await axios.post(`${PAYSTACK_BASE_URL}/submit_phone`, {
+        reference, phone,
+      }, {
+        headers: {
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        },
+      });
+  
+      if (charge.data.data.status === 'success') {
+        await completeSuccessfulCharge({
+          accountId: transaction.account_id,
+          reference,
+          amount: transaction.amount,
+        });
+        return {
+          success: true,
+          message: 'Charge successful',
+          shouldCreditAccount: true,
+        };
+      }
+      await models.card_transactions.update(
+        { last_response: charge.data.data.status },
+        { where: { external_reference: reference } },
+      );
+  
+      return {
+        success: true,
+        message: charge.data.data.message,
+        data: {
+          shouldCreditAccount: false,
+          reference,
+        },
+      };
+    } catch (error) {
+      return error.response ? error.response.data : error;
+    }
+}
 
 // chargeCard({
 //     accounId: 1,
