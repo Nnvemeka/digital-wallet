@@ -13,8 +13,20 @@ module.exports = (sequelize, DataTypes) => {
   }
   CardTransaction.init({
     external_reference: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       unique: true,
+    },
+    account_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    amount: {
+      type: DataTypes.DECIMAL(20, 4).UNSIGNED,
+      allowNull: false,
+    },
+    last_response: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     created_at: {
       type: DataTypes.DATE,

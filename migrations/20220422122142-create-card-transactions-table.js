@@ -9,9 +9,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      account_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       external_reference: {
+        allowNull: false,
         type: Sequelize.STRING,
-        allowNull: false
+      },
+      amount: {
+        allowNull: false,
+        type: Sequelize.DECIMAL(20, 4),
+      },
+      last_response: {
+        allowNull: false,
+        type: Sequelize.STRING,
       },
       created_at: {
         allowNull: false,
