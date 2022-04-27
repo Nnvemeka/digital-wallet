@@ -9,13 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      account_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
       external_reference: {
         allowNull: false,
         type: Sequelize.STRING,
+      },
+      account_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       amount: {
         allowNull: false,
@@ -28,10 +28,12 @@ module.exports = {
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW')
       },
       updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW')
       }
     });
   },
