@@ -303,19 +303,29 @@ async function submitOtp({
     }
 }
 
+async function chargeCardWithAuthorization(authorization) {
+    const charge = await axios.post(PAYSTACK_BASE_URL, {
+        authorization_code: authorization,
+        email: 'nnvedward@gmail.com',
+        amount: 2000
+    }, {
+        headers: {
+            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`
+        }
+    })
+    return {
+        success: true,
+        data: charge.data.data
+    }
+}
+chargeCardWithAuthorization('AUTH_1kca8aop5a').then(console.log).catch(console.log)
+
 // chargeCard({
-//     accounId: 1,
-//     pan: '507850785078507812',
+//     accounId: 2,
+//     pan: '4084084084084081',
 //     expiry_month: '04',
 //     expiry_year: '23',
-//     cvv: '081',
+//     cvv: '408',
 //     amount: 10000,
 //     email: 'nnvedward@gmail.com'
-// }).then(console.log).catch(console.log)
-
-// submitPin({
-//     accounId: 1,
-//     reference: 'uhtndxy19vvxryz',
-//     amount: 10000,
-//     pin: '1111'
 // }).then(console.log).catch(console.log)
