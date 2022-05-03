@@ -322,10 +322,10 @@ chargeCardWithAuthorization('AUTH_1kca8aop5a').then(console.log).catch(console.l
 
 // chargeCard({
 //     accounId: 2,
-//     pan: '4084084084084081',
-//     expiry_month: '04',
+//     pan: '506066506066506067',
+//     expiry_month: '05',
 //     expiry_year: '23',
-//     cvv: '408',
+//     cvv: '060',
 //     amount: 10000,
 //     email: 'nnvedward@gmail.com'
 // }).then(console.log).catch(console.log)
