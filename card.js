@@ -318,7 +318,7 @@ async function chargeCardWithAuthorization(authorization) {
         data: charge.data.data
     }
 }
-chargeCardWithAuthorization('AUTH_1kca8aop5a').then(console.log).catch(console.log)
+// chargeCardWithAuthorization('AUTH_1kca8aop5a').then(console.log).catch(console.log)
 
 // chargeCard({
 //     accounId: 2,
