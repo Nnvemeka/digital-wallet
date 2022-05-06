@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true
     },
     position: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     enabled: {
