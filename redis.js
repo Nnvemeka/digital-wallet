@@ -8,7 +8,13 @@ client.on("error", function (error) {
 });
 
 const addElement = promisify(client.sadd).bind(client);
-const expireElement = promisify(client.expire).bind(client);
+const expire = promisify(client.expire).bind(client);
+
+const zadd = promisify(client.zadd).bind(client);
+const zrevrange = promisify(client.zrevrange).bind(client);
+const exists = promisify(client.exists).bind(client);
+const zincrby = promisify(client.zincrby).bind(client);
+
 
 async function checkRedisHash(accountId, hash) {
     const response = await addElement(accountId, hash)
@@ -18,8 +24,14 @@ async function checkRedisHash(accountId, hash) {
             error: 'Duplicate transaction'
         }
     }
-    await expireElement(accountId, 30)
+    await expire(accountId, 30)
     return { success: true }
 }
 
-module.exports = { checkRedisHash }
+// zadd('myset', 1, 'first').then(console.log).catch(console.log)
+// zadd('myset', 2, 'second').then(console.log).catch(console.log)
+// zadd('myset', 3, 'third').then(console.log).catch(console.log)
+
+// zrevrange('myset', 0, '-1').then(console.log).catch(console.log)
+
+module.exports = { checkRedisHash, zadd, zrevrange, exists, expire, zincrby }
